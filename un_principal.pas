@@ -8,19 +8,19 @@ uses
 
 type
   Tfrm_principal = class(TForm)
-    Panel1: TPanel;
+    pnlGeral: TPanel;
     ProgressBar1: TProgressBar;
     ProgressBar2: TProgressBar;
-    Button1: TButton;
-    Button2: TButton;
-    Label1: TLabel;
-    Label2: TLabel;
-    Button3: TButton;
-    Button4: TButton;
-    procedure Button3Click(Sender: TObject);
-    procedure Button1Click(Sender: TObject);
-    procedure Button2Click(Sender: TObject);
-    procedure Button4Click(Sender: TObject);
+    btnBarra1: TButton;
+    BtnBarra2: TButton;
+    lblBarra2: TLabel;
+    lblBarra1: TLabel;
+    btnMsgTela: TButton;
+    btnIniciaTodasBarras: TButton;
+    procedure btnMsgTelaClick(Sender: TObject);
+    procedure btnBarra1Click(Sender: TObject);
+    procedure BtnBarra2Click(Sender: TObject);
+    procedure btnIniciaTodasBarrasClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -36,7 +36,7 @@ implementation
 
 { Tfrm_principal }
 
-procedure Tfrm_principal.Button1Click(Sender: TObject);
+procedure Tfrm_principal.btnBarra1Click(Sender: TObject);
 var
   Task: TTarefaParalela;
 begin
@@ -49,17 +49,16 @@ begin
     {Permite que a Thread seja pausada para que sua execução possa 	ocorrer posteriormente}
     Task.Suspend;
 
-    if Pos('Task inicializada', Label2.caption) = 0 then
-      Label2.caption := Label2.Caption + '- Task inicializada!';
+    if Pos('Task inicializada', lblBarra1.caption) = 0 then
+      lblBarra1.caption := lblBarra1.Caption + '- Task inicializada!';
 
     {Inicia a Tarefa rodando Execute}
     Task.Start;
   finally
-    {Faz com que a execução da Thread seja encerrada.}
   end;
 end;
 
-procedure Tfrm_principal.Button2Click(Sender: TObject);
+procedure Tfrm_principal.BtnBarra2Click(Sender: TObject);
 var
   Task: TTarefaParalela;
 begin
@@ -72,25 +71,24 @@ begin
     {Permite que a Thread seja pausada para que sua execução possa 	ocorrer posteriormente}
     Task.Suspend;
 
-    if Pos('Task inicializada', Label1.caption) = 0 then
-      Label1.caption := Label1.Caption + '- Task inicializada!';
+    if Pos('Task inicializada', lblBarra2.caption) = 0 then
+      lblBarra2.caption := lblBarra2.Caption + '- Task inicializada!';
 
     {Inicia a Tarefa rodando Execute}
     Task.Start;
   finally
-    {Faz com que a execução da Thread seja encerrada.}
   end;
 end;
 
-procedure Tfrm_principal.Button3Click(Sender: TObject);
+procedure Tfrm_principal.btnMsgTelaClick(Sender: TObject);
 begin
   ShowMessage('Mensagem teste .... Progresso aumenta enquanto tem mensagem na tela?');
 end;
 
-procedure Tfrm_principal.Button4Click(Sender: TObject);
+procedure Tfrm_principal.btnIniciaTodasBarrasClick(Sender: TObject);
 begin
-  Button1Click(Sender);
-  Button2Click(Sender);
+  btnBarra1Click(Sender);
+  btnBarra2Click(Sender);
 end;
 
 end.
