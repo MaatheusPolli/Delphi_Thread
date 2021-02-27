@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>2021/02/26 14:34:51.000.882,=C:\Users\mapol\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2021/02/26 14:35:23.000.315,C:\Users\mapol\Documents\Embarcadero\Studio\Projects\Unit1.dfm=C:\Fontes\Delphi\Thread\un_principal.dfm</Transaction>
+    <Transaction>2021/02/26 14:35:23.000.315,C:\Users\mapol\Documents\Embarcadero\Studio\Projects\Unit1.pas=C:\Fontes\Delphi\Thread\un_principal.pas</Transaction>
+    <Transaction>2021/02/26 14:35:40.000.723,C:\Users\mapol\Documents\Embarcadero\Studio\Projects\Project1.dproj=C:\Fontes\Delphi\Thread\Thread.dproj</Transaction>
+    <Transaction>2021/02/26 14:47:13.000.235,=C:\Fontes\Delphi\Thread\Unit1.pas</Transaction>
+    <Transaction>2021/02/26 14:48:02.000.006,C:\Fontes\Delphi\Thread\Unit1.pas=C:\Fontes\Delphi\Thread\un_controlesecao.pas</Transaction>
+    <Transaction>2021/02/26 14:55:41.000.317,=C:\Fontes\Delphi\Thread\Unit1.pas</Transaction>
+    <Transaction>2021/02/26 14:57:42.000.669,C:\Fontes\Delphi\Thread\Unit1.pas=C:\Fontes\Delphi\Thread\un_tarefaParalela.pas</Transaction>
+  </Transactions>
+</BorlandProject>
