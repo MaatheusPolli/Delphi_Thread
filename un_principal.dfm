@@ -2,8 +2,8 @@ object frm_principal: Tfrm_principal
   Left = 0
   Top = 0
   Caption = 'Estudando Thread'
-  ClientHeight = 359
-  ClientWidth = 559
+  ClientHeight = 227
+  ClientWidth = 563
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -14,21 +14,23 @@ object frm_principal: Tfrm_principal
   Position = poScreenCenter
   PixelsPerInch = 96
   TextHeight = 13
-  object Panel1: TPanel
+  object pnlGeral: TPanel
     Left = 0
     Top = 0
-    Width = 559
-    Height = 359
+    Width = 563
+    Height = 227
     Align = alClient
     TabOrder = 0
-    object Label1: TLabel
+    ExplicitWidth = 559
+    ExplicitHeight = 359
+    object lblBarra2: TLabel
       Left = 15
       Top = 80
       Width = 83
       Height = 13
       Caption = 'Barra de Progr. 2'
     end
-    object Label2: TLabel
+    object lblBarra1: TLabel
       Left = 15
       Top = 5
       Width = 83
@@ -49,41 +51,41 @@ object frm_principal: Tfrm_principal
       Height = 40
       TabOrder = 1
     end
-    object Button1: TButton
-      Left = 79
-      Top = 162
+    object btnBarra1: TButton
+      Left = 15
+      Top = 161
       Width = 98
       Height = 37
       Caption = 'Barra 1'
       TabOrder = 2
-      OnClick = Button1Click
+      OnClick = btnBarra1Click
     end
-    object Button2: TButton
-      Left = 207
+    object BtnBarra2: TButton
+      Left = 135
       Top = 161
       Width = 97
       Height = 37
       Caption = 'Barra 2'
       TabOrder = 3
-      OnClick = Button2Click
+      OnClick = BtnBarra2Click
     end
-    object Button3: TButton
-      Left = 328
+    object btnMsgTela: TButton
+      Left = 256
       Top = 161
       Width = 128
       Height = 37
       Caption = 'Mensagem na Tela'
       TabOrder = 4
-      OnClick = Button3Click
+      OnClick = btnMsgTelaClick
     end
-    object Button4: TButton
-      Left = 159
-      Top = 233
+    object btnIniciaTodasBarras: TButton
+      Left = 400
+      Top = 161
       Width = 145
       Height = 37
       Caption = 'Iniciar as Duas Barras'
       TabOrder = 5
-      OnClick = Button4Click
+      OnClick = btnIniciaTodasBarrasClick
     end
   end
 end
