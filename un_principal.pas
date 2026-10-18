@@ -1,4 +1,4 @@
-unit un_principal;
+Ôªøunit un_principal;
 
 interface
 
@@ -21,10 +21,13 @@ type
     procedure btnBarra1Click(Sender: TObject);
     procedure BtnBarra2Click(Sender: TObject);
     procedure btnIniciaTodasBarrasClick(Sender: TObject);
+    procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
   private
-    { Private declarations }
+    FTarefasAtivas: Integer;
+    procedure IniciaTarefa(Barra: TProgressBar; Lbl: TLabel);
+    procedure TarefaTerminou(Sender: TObject);
+    procedure AtualizaBotoes;
   public
-    { Public declarations }
   end;
 
 var
@@ -36,48 +39,55 @@ implementation
 
 { Tfrm_principal }
 
-procedure Tfrm_principal.btnBarra1Click(Sender: TObject);
+procedure Tfrm_principal.IniciaTarefa(Barra: TProgressBar; Lbl: TLabel);
 var
   Task: TTarefaParalela;
 begin
-  {	CreateSuspended. Se TThread.Create(True), ent„o a Thread n„o È
-  iniciada automaticamente, sen„o ela È executada a partir deste
-  momento;}
-  Task := TTarefaParalela.Create(True);
-  Task.ConfiguraTask(ProgressBar1,True);
-  try
-    {Permite que a Thread seja pausada para que sua execuÁ„o possa 	ocorrer posteriormente}
-    Task.Suspend;
+  Task := TTarefaParalela.Create(Barra);
+  Task.OnTerminate := TarefaTerminou;
 
-    if Pos('Task inicializada', lblBarra1.caption) = 0 then
-      lblBarra1.caption := lblBarra1.Caption + '- Task inicializada!';
+  if Pos('Task inicializada', Lbl.Caption) = 0 then
+    Lbl.Caption := Lbl.Caption + ' - Task inicializada!';
 
-    {Inicia a Tarefa rodando Execute}
-    Task.Start;
-  finally
-  end;
+  Inc(FTarefasAtivas);
+  AtualizaBotoes;
+
+  Barra.Position := 0;
+  { Start executa Execute na thread criada suspensa }
+  Task.Start;
+end;
+
+procedure Tfrm_principal.TarefaTerminou(Sender: TObject);
+begin
+  { OnTerminate roda na thread principal }
+  Dec(FTarefasAtivas);
+  AtualizaBotoes;
+end;
+
+procedure Tfrm_principal.AtualizaBotoes;
+begin
+  { Evita iniciar a mesma barra duas vezes enquanto h√° tarefas rodando }
+  btnBarra1.Enabled := FTarefasAtivas = 0;
+  BtnBarra2.Enabled := FTarefasAtivas = 0;
+  btnIniciaTodasBarras.Enabled := FTarefasAtivas = 0;
+end;
+
+procedure Tfrm_principal.btnBarra1Click(Sender: TObject);
+begin
+  IniciaTarefa(ProgressBar1, lblBarra1);
 end;
 
 procedure Tfrm_principal.BtnBarra2Click(Sender: TObject);
-var
-  Task: TTarefaParalela;
 begin
-  {	CreateSuspended. Se TThread.Create(True), ent„o a Thread n„o È
-  iniciada automaticamente, sen„o ela È executada a partir deste
-  momento;}
-  Task := TTarefaParalela.Create(True);
-  Task.ConfiguraTask(ProgressBar2,True);
-  try
-    {Permite que a Thread seja pausada para que sua execuÁ„o possa 	ocorrer posteriormente}
-    Task.Suspend;
+  IniciaTarefa(ProgressBar2, lblBarra2);
+end;
 
-    if Pos('Task inicializada', lblBarra2.caption) = 0 then
-      lblBarra2.caption := lblBarra2.Caption + '- Task inicializada!';
-
-    {Inicia a Tarefa rodando Execute}
-    Task.Start;
-  finally
-  end;
+procedure Tfrm_principal.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+begin
+  { As threads chamam Synchronize com o formul√°rio; fechar com tarefas rodando causaria acesso a objeto liberado }
+  CanClose := FTarefasAtivas = 0;
+  if not CanClose then
+    MessageDlg('Aguarde o t√©rmino das barras de progresso antes de fechar.', mtInformation, [mbOK], 0);
 end;
 
 procedure Tfrm_principal.btnMsgTelaClick(Sender: TObject);
@@ -87,8 +97,8 @@ end;
 
 procedure Tfrm_principal.btnIniciaTodasBarrasClick(Sender: TObject);
 begin
-  btnBarra1Click(Sender);
-  btnBarra2Click(Sender);
+  IniciaTarefa(ProgressBar1, lblBarra1);
+  IniciaTarefa(ProgressBar2, lblBarra2);
 end;
 
 end.

@@ -11,6 +11,7 @@ object frm_principal: Tfrm_principal
   Font.Name = 'Tahoma'
   Font.Style = []
   OldCreateOrder = False
+  OnCloseQuery = FormCloseQuery
   Position = poScreenCenter
   PixelsPerInch = 96
   TextHeight = 13

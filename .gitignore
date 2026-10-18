@@ -1,0 +1,16 @@
+# Planejamento local: nunca versionar
+planejamento.md
+
+# Artefatos de compilação do Delphi
+Win32/
+Win64/
+__history/
+__recovery/
+*.dcu
+*.dcp
+*.bpl
+*.exe
+*.dll
+*.dproj.local
+*.stat
+*.~*

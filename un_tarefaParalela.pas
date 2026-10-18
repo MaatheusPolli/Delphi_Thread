@@ -1,89 +1,78 @@
-unit un_tarefaParalela;
+ï»¿unit un_tarefaParalela;
 
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls, SyncObjs;
+  Winapi.Windows, System.Classes, Vcl.ComCtrls, System.SyncObjs;
 
 type
-   { Thread }
-   TTarefaParalela = class(TThread)
-      protected
-        	{O código que será executado pela Thread. Uma boa prática é efetuar a
-          verificação do valor da propriedade Terminated, pois se o
-          mesmo for True indica que a 	Thread foi finalizada.}
-         procedure Execute; override;
-
-      private
-        Controle : TCriticalSection;
-        FProgressBar: TProgressBar;
-        procedure SetCriticalSection(bAtivar: Boolean);
-
-      public
-        destructor Destroy; override;
-
-        procedure ConfiguraTask(Barra: TProgressBar; bCreateSuspended: Boolean);
-        procedure SetProgressBar;
-   end;
+  { Thread que avanÃ§a uma TProgressBar de 1 a 100 sem travar a tela }
+  TTarefaParalela = class(TThread)
+  private
+    FProgressBar: TProgressBar;
+    FControle: TCriticalSection;
+    FPosicao: Integer;
+    procedure AtualizaBarra;
+  protected
+    { CÃ³digo executado pela thread. Verifique Terminated para encerrar cedo. }
+    procedure Execute; override;
+  public
+    { Cria a thread suspensa. Chame Start para iniciÃ¡-la. }
+    constructor Create(Barra: TProgressBar);
+    destructor Destroy; override;
+  end;
 
 implementation
 
 { TTarefaParalela }
 
+constructor TTarefaParalela.Create(Barra: TProgressBar);
+begin
+  inherited Create(True);
+  FProgressBar := Barra;
+  FControle := TCriticalSection.Create;
+
+  { Libera a instÃ¢ncia sozinha ao terminar, sem precisar de Free }
+  FreeOnTerminate := True;
+  Priority := tpNormal;
+end;
+
 destructor TTarefaParalela.Destroy;
 begin
+  FControle.Free;
   inherited;
-  Controle.Free;
+end;
+
+procedure TTarefaParalela.AtualizaBarra;
+begin
+  { Roda na thread principal (via Synchronize), onde Ã© seguro usar componentes VCL }
+  FControle.Acquire;
+  try
+    FProgressBar.Position := FPosicao;
+  finally
+    FControle.Release;
+  end;
 end;
 
 procedure TTarefaParalela.Execute;
-begin
-  {determinação do nível de prioridade de execução da Thread em
-  questão com relação as outras Threads que fazem parte do 		processo atual;}
-  Priority := tpNormal;
-
-  try
-    SetCriticalSection(True);
-    SetProgressBar;
-  finally
-    SetCriticalSection(False);
-  end;
-end;
-
-procedure TTarefaParalela.SetCriticalSection(bAtivar: Boolean);
-begin
-  if bAtivar then
-    Controle.Acquire
-  else
-    Controle.Release;
-end;
-
-procedure TTarefaParalela.SetProgressBar;
 var
-  i:Integer;
+  i: Integer;
 begin
-  for I := 1 to 100 do
+  for i := 1 to 100 do
   begin
-    FProgressBar.Position := i;
+    if Terminated then
+      Exit;
+
+    FControle.Acquire;
+    try
+      FPosicao := i;
+    finally
+      FControle.Release;
+    end;
+
+    Synchronize(AtualizaBarra);
     Sleep(25);
   end;
-end;
-
-procedure TTarefaParalela.ConfiguraTask(Barra: TProgressBar; bCreateSuspended: Boolean);
-begin
-  FProgressBar := Barra;
-
-  Controle := TCriticalSection.Create;
-
-  {	Quando definido como True, permite a 	destruição/liberação da instância de TThread
-   de uma forma 	automática, dispensando assim o uso do FreeAndNil(), 	que é
-   utilizado para liberar objetos.}
-  FreeOnTerminate := True;
-
-  {Faz com que a Thread inicie, caso tenha sido criada em estado de
-  suspensão, efetuando assim o código presente no procedimento 	Execute;}
-  Resume;
 end;
 
 end.
